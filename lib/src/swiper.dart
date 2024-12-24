@@ -145,7 +145,7 @@ class Swiper extends StatefulWidget {
     this.pagination,
     this.plugins,
     this.physics,
-    Key? key,
+    super.key,
     this.controller,
     this.customLayoutOption,
 
@@ -173,8 +173,7 @@ class Swiper extends StatefulWidget {
                     (loop && layout != SwiperLayout.DEFAULT)),
             "Only support `PageIndicatorLayout.SCALE` and `PageIndicatorLayout.COLOR`when layout==SwiperLayout.DEFAULT in loop mode"),
         autoplay = (autoplay && itemCount > 1),
-        loop = (loop && itemCount > 1),
-        super(key: key);
+        loop = (loop && itemCount > 1);
 
   factory Swiper.children({
     required List<Widget> children,

@@ -10,7 +10,16 @@ class ColorPainter extends CustomPainter {
   final List<Color> colors;
 
   ColorPainter(this._paint, this.info, this.colors);
+  // conver color
+  int colorToInt(Color color) {
+    final a = (color.a * 255).round();
+    final r = (color.r * 255).round();
+    final g = (color.g * 255).round();
+    final b = (color.b * 255).round();
 
+    // Combine the components into a single int using bit shifting
+    return (a << 24) | (r << 16) | (g << 8) | b;
+  }
   @override
   void paint(Canvas canvas, Size size) {
     int index = info.fromIndex;
@@ -25,7 +34,7 @@ class ColorPainter extends CustomPainter {
     double? position = info.position;
     if (info.forward!) {
       if (index < colors.length - 1) {
-        color = colors[index + 1].value & 0x00ffffff;
+        color = colorToInt(colors[index + 1]) & 0x00ffffff;
         opacity = (position! <= 0
             ? (-position / info.viewportFraction!)
             : 1 - position / info.viewportFraction!);
@@ -43,7 +52,7 @@ class ColorPainter extends CustomPainter {
       }
     } else {
       if (index > 0) {
-        color = colors[index - 1].value & 0x00ffffff;
+        color = colorToInt(colors[index - 1]) & 0x00ffffff;
         opacity = (position! > 0
             ? position / info.viewportFraction!
             : (1 + position / info.viewportFraction!));
@@ -88,11 +97,11 @@ class ParallaxColor extends StatefulWidget {
   final TransformInfo info;
 
   const ParallaxColor({
-    Key? key,
+    super.key,
     required this.colors,
     required this.info,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -107,12 +116,12 @@ class ParallaxContainer extends StatelessWidget {
   final double opacityFactor;
 
   const ParallaxContainer({
-    Key? key,
+    super.key,
     required this.child,
     required this.position,
     this.translationFactor = 100.0,
     this.opacityFactor = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +141,7 @@ class ParallaxImage extends StatelessWidget {
 
   ParallaxImage.asset(
     String name, {
-    Key? key,
+    super.key,
     required double position,
     this.imageFactor = 0.3,
   })  : image = Image.asset(
@@ -142,8 +151,7 @@ class ParallaxImage extends StatelessWidget {
             0.5 + position * imageFactor,
             0.5,
           ),
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {
